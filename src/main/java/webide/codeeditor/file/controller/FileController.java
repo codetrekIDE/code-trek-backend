@@ -1,10 +1,9 @@
 package webide.codeeditor.file.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import webide.codeeditor.file.model.FileResponse;
-import webide.codeeditor.file.service.DatabaseFileService;
+import webide.codeeditor.file.service.FileOperationService;
 
 import java.io.IOException;
 
@@ -13,9 +12,9 @@ import java.io.IOException;
 @RequestMapping("/files")
 public class FileController {
 
-    private final DatabaseFileService dataFileService;
+    private final FileOperationService dataFileService;
 
-    public FileController(DatabaseFileService dataFileService) {
+    public FileController(FileOperationService dataFileService) {
         this.dataFileService = dataFileService;
     }
 
