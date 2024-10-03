@@ -21,7 +21,6 @@ public class CodeExecutionService {
         Files.write(Paths.get(filePath), code.getBytes()); //code문자열을 바이트배열로 파일에 저장
 
         // ProcessBuilder를 사용해 Python 코드를 실행
-
         ProcessBuilder processBuilder = new ProcessBuilder("python3", filePath);
         processBuilder.redirectErrorStream(true); // 표준 출력과 오류 출력을 하나로 합침
         // redirectErrorStream : 개별 오류 처리 로직을 짜지 않고도 알아서 발생하는 오류를 읽어와줌

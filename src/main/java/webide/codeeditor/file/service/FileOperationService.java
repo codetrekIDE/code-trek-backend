@@ -8,6 +8,7 @@ import webide.codeeditor.file.repository.FileRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
@@ -24,17 +25,16 @@ public class FileOperationService implements FileService {
 
     @Override
     public void createFile(String path, String content) throws IOException {
-        String filePath = Paths.get(path, "main.py").toString();
-        if (Files.exists(Paths.get(filePath))) {
+        Path filePath = Paths.get(path);
+        if (Files.exists(filePath)) {
             throw new IOException("File already exists: " + path);
         }
+        Files.write(filePath, content.getBytes());
 
         // 파일 엔티티 생성 후 데이터베이스에 저장
-        FileEntity fileEntity = new FileEntity("main.py", content);
+        FileEntity fileEntity = new FileEntity(path, content);
         fileRepository.save(fileEntity);
 
-        // 파일 시스템에 빈 파일 생성
-        Files.write(Paths.get(filePath), "".getBytes());
         log.info("File created at: {}", filePath); // 로그 출력
     }
 
