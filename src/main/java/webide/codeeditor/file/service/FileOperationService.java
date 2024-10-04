@@ -40,13 +40,13 @@ public class FileOperationService implements FileService {
 
     @Override
     public String readFile(String path) throws IOException {
-        String filePath = Paths.get(path, "main.py").toString();
-        if (!Files.exists(Paths.get(filePath))) {
+        Path filePath = Paths.get(path);
+        if (!Files.exists(filePath)) {
             throw new IOException("File not found: " + path);
         }
 
         // 파일 내용을 데이터베이스에서 조회
-        Optional<FileEntity> fileEntityOptional = fileRepository.findByFileName("main.py");
+        Optional<FileEntity> fileEntityOptional = fileRepository.findByFileName(path);
         FileEntity fileEntity = fileEntityOptional.orElseThrow(() -> new IOException("File not found in database"));
         log.info("File read from database: {}", fileEntity.getFileName());
         return fileEntity.getContent(); // 파일 내용 반환
@@ -54,17 +54,17 @@ public class FileOperationService implements FileService {
 
     @Override
     public void deleteFile(String path) throws IOException {
-        String filePath = Paths.get(path, "main.py").toString();
-        if (!Files.exists(Paths.get(filePath))) {
+        Path filePath = Paths.get(path);
+        if (!Files.exists(filePath)) {
             throw new IOException("File not found: " + path);
         }
 
         // 파일 시스템에서 파일 삭제
-        Files.delete(Paths.get(filePath));
+        Files.delete(filePath);
         log.info("File deleted from filesystem: {}", filePath);
 
         // 데이터베이스에서 파일 엔티티 삭제
-        Optional<FileEntity> fileEntityOptional = fileRepository.findByFileName("main.py");
+        Optional<FileEntity> fileEntityOptional = fileRepository.findByFileName(path);
         FileEntity fileEntity = fileEntityOptional.orElseThrow(() -> new IOException("File not found in database"));
         fileRepository.delete(fileEntity);
         log.info("File deleted from database: {}", fileEntity.getFileName());
@@ -72,16 +72,16 @@ public class FileOperationService implements FileService {
 
     @Override
     public void updateFile(String path, String content) throws IOException {
-        String filePath = Paths.get(path, "main.py").toString();
-        if (!Files.exists(Paths.get(filePath))) {
+        Path filePath = Paths.get(path);
+        if (!Files.exists(filePath)) {
             throw new IOException("File not found: " + path);
         }
 
         // 파일 내용을 덮어쓰기
-        Files.write(Paths.get(filePath), content.getBytes());
+        Files.write(filePath, content.getBytes());
 
         // 데이터베이스에 있는 파일 내용도 업데이트
-        Optional<FileEntity> fileEntityOptional = fileRepository.findByFileName("main.py");
+        Optional<FileEntity> fileEntityOptional = fileRepository.findByFileName(path);
         FileEntity fileEntity = fileEntityOptional.orElseThrow(() -> new IOException("File not found in database"));
         fileEntity.setContent(content);
         fileRepository.save(fileEntity);
