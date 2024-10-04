@@ -2,6 +2,7 @@ package webide.codeeditor.file.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import webide.codeeditor.file.model.FileRequest;
 import webide.codeeditor.file.model.FileResponse;
 import webide.codeeditor.file.service.FileOperationService;
 
@@ -20,20 +21,20 @@ public class FileController {
 
     // 파일 생성 API
     @PostMapping("/create")
-    public ResponseEntity<String> createFile(@RequestBody FileResponse fileResponse) {
+    public ResponseEntity<String> createFile(@RequestBody FileRequest fileRequest) {
         try {
-            dataFileService.createFile(fileResponse.getPath(), fileResponse.getContent());
-            return ResponseEntity.ok("File created successfully at: " + fileResponse.getPath());
+            dataFileService.createFile(fileRequest.getPath(), fileRequest.getContent());
+            return ResponseEntity.ok("File created successfully at: " + fileRequest.getPath());
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateFile(@RequestParam String path, @RequestParam String content) {
+    public ResponseEntity<String> updateFile(@RequestBody FileRequest fileRequest) {
         try {
-            dataFileService.updateFile(path, content);
-            return ResponseEntity.ok("File updated successfully at : " + path);
+            dataFileService.updateFile(fileRequest.getPath(), fileRequest.getContent());
+            return ResponseEntity.ok("File updated successfully at : " + fileRequest.getPath());
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
