@@ -1,4 +1,4 @@
-package webide.codeeditor.project.repository;
+package webide.codeeditor.membertemp;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Project {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,13 +21,8 @@ public class Project {
     private String name;
 
     @Column
-    private String description;
-
-    //TODO 파일 id 연결
+    private String email;
 
     @Column
-    private Timestamp created_at;
-
-    @Column
-    private Timestamp updated_at;
+    private String password;
 }
