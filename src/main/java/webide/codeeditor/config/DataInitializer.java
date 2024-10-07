@@ -1,10 +1,11 @@
 package webide.codeeditor.config;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import webide.codeeditor.membertemp.User;
-import webide.codeeditor.membertemp.UserRepository;
+import webide.codeeditor.member.domain.entity.User;
+import webide.codeeditor.member.repository.UserRepository;
 import webide.codeeditor.project.repository.Project;
 import webide.codeeditor.project.repository.ProjectRepository;
 
@@ -23,12 +24,10 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         for (int i = 1; i < 6; i++) {
-            String name = "사용자" + Integer.toString(i);
-            String email = "lsj" + Integer.toString(i) + "@gmail.com";
+            String loginId = "lsj" + Integer.toString(i);
             String password = "password" + Integer.toString(i);
             User member = User.builder()
-                    .name(name)
-                    .email(email)
+                    .loginId(loginId)
                     .password(password)
                     .build();
             memberRepository.save(member);

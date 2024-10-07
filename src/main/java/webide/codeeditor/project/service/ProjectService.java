@@ -2,8 +2,8 @@ package webide.codeeditor.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import webide.codeeditor.membertemp.User;
-import webide.codeeditor.membertemp.UserRepository;
+import webide.codeeditor.member.domain.entity.User;
+import webide.codeeditor.member.repository.UserRepository;
 import webide.codeeditor.project.model.request.ProjectCreateRequest;
 import webide.codeeditor.project.model.request.ProjectUpdateRequest;
 import webide.codeeditor.project.model.response.ProjectCreateResponse;

@@ -2,7 +2,7 @@ package webide.codeeditor.project.repository;
 
 import jakarta.persistence.*;
 import lombok.*;
-import webide.codeeditor.membertemp.User;
+import webide.codeeditor.member.domain.entity.User;
 
 @Getter
 @Setter
