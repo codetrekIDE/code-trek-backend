@@ -26,9 +26,11 @@ public class ProjectController {
     @PostMapping("/create")
     public ResponseEntity<?> createProject(
             @RequestBody ProjectCreateRequest projectCreateRequest,
-            @CookieValue(name = "userId") Long userId
+            @CookieValue(name = "userId", defaultValue = "1") Long userId
             ) {
-
+        System.out.println("들어왔습니다");
+        System.out.println(userId);
+        System.out.println(projectCreateRequest.getTitle());
         if (userId == null) {
             return ResponseEntity.status(401).body("Error: Invalid login credentials.");
         }

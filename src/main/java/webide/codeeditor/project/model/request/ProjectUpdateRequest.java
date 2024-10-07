@@ -12,6 +12,6 @@ import lombok.Setter;
 public class ProjectUpdateRequest {
 
     private Long id;
-    private String name;
+    private String title;
     private String description;
 }

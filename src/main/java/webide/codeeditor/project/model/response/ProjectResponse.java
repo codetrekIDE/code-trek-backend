@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 public class ProjectResponse {
 
     private Long id;
-    private String name;
+    private String title;
     private String description;
     private Timestamp created_at;
     private Timestamp updated_at;

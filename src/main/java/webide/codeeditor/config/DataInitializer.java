@@ -37,7 +37,7 @@ public class DataInitializer implements CommandLineRunner {
             String name = "새 프로젝트" + Integer.toString(i);
             String description = "테스트용 프로젝트 더미 데이터입니다" + Integer.toString(i);
             Project project = Project.builder()
-                    .name(name)
+                    .title(name)
                     .description(description)
                     .created_at(new Timestamp(System.currentTimeMillis()))
                     .updated_at(new Timestamp(System.currentTimeMillis()))

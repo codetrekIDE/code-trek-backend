@@ -27,15 +27,18 @@ public class ProjectService {
     private final ProjectUserRepository projectUserRepository;
     private final UserRepository userRepository;
 
-    public ProjectCreateResponse createProject(Long userId, ProjectCreateRequest projectCreateRequest) {
+    public ProjectCreateResponse createProject(
+            Long userId,
+            ProjectCreateRequest projectCreateRequest
+    ) {
         // 프로젝트 생성
         Project project = Project.builder()
-                .name(projectCreateRequest.getName())
+                .title(projectCreateRequest.getTitle())
                 .description(projectCreateRequest.getDescription())
                 .created_at(new Timestamp(System.currentTimeMillis()))
+//                .created_at(projectCreateRequest.getCreated_at())
                 .updated_at(new Timestamp(System.currentTimeMillis()))
                 .build();
-
         // db에 저장
         Project savedProject = projectRepository.save(project);
 
@@ -54,7 +57,7 @@ public class ProjectService {
 
         //ProjectCreateResponse로 변환
         ProjectCreateResponse projectCreateResponse = ProjectCreateResponse.builder()
-                .id(project.getId())
+                .projectId(project.getId())
                 .build();
 
         return projectCreateResponse;
@@ -65,7 +68,7 @@ public class ProjectService {
 
         // TODO 미흡한 부분 수정하기
         Project project = projectOptional.get();
-        project.setName(projectUpdateRequest.getName());
+        project.setTitle(projectUpdateRequest.getTitle());
         project.setDescription(projectUpdateRequest.getDescription());
         project.setUpdated_at(new Timestamp((System.currentTimeMillis())));
 
@@ -101,7 +104,7 @@ public class ProjectService {
         // projectResponse로 변경
         ProjectResponse projectResponse = ProjectResponse.builder()
                 .id(project.getId())
-                .name(project.getName())
+                .title(project.getTitle())
                 .description(project.getDescription())
                 .created_at(project.getCreated_at())
                 .updated_at(project.getUpdated_at())

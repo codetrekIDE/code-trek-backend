@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class ProjectCreateResponse {
 
-    private Long id;
+    private Long projectId;
 }
