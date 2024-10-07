@@ -7,10 +7,11 @@ import webide.codeeditor.file.model.FileResponse;
 import webide.codeeditor.file.service.FileOperationService;
 
 import java.io.IOException;
+import java.util.UUID;
 
 // API 컨트롤러
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/api/files")
 public class FileController {
 
     private final FileOperationService dataFileService;
@@ -30,31 +31,31 @@ public class FileController {
         }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<String> updateFile(@RequestBody FileRequest fileRequest) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateFile(@PathVariable UUID uuid, @RequestBody FileRequest fileRequest) {
         try {
-            dataFileService.updateFile(fileRequest.getPath(), fileRequest.getContent());
-            return ResponseEntity.ok("File updated successfully at : " + fileRequest.getPath());
+            dataFileService.updateFileById(uuid, fileRequest.getContent());
+            return ResponseEntity.ok("File updated successfully id : " + uuid);
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
 
-    @DeleteMapping("/delete/{path}")
-    public ResponseEntity<String> deleteFile(@PathVariable String path) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteFile(@PathVariable UUID uuid) {
         try {
-            dataFileService.deleteFile(path);
-            return ResponseEntity.ok("File deleted successfully at : " + path);
+            dataFileService.deleteFileById(uuid);
+            return ResponseEntity.ok("File deleted successfully id : " + uuid);
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
 
     @GetMapping("/read/{path}")
-    public ResponseEntity<String> readFile(@PathVariable String path) {
+    public ResponseEntity<String> readFile(@PathVariable UUID uuid) {
         try {
-            String content = dataFileService.readFile(path);
-            return ResponseEntity.ok("File read successfully at : " + path);
+            String content = dataFileService.readFindById(uuid);
+            return ResponseEntity.ok("File read successfully id : " + uuid);
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
