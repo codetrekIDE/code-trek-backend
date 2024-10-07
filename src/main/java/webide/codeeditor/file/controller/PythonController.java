@@ -8,7 +8,7 @@ import webide.codeeditor.file.service.CodeExecutionService;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/execute")
+@RequestMapping("/api")
 public class PythonController {
 
     private final CodeExecutionService pythonExecutionService;
@@ -18,10 +18,10 @@ public class PythonController {
     }
 
     // Python 코드 실행 API
-    @PostMapping("/python")
+    @PostMapping("/execute")
     public ResponseEntity<String> executePythonCode(@RequestBody PythonRequest code) {
         try {
-            String result = pythonExecutionService.executePythonCode(code.getContent());
+            String result = pythonExecutionService.executePythonCode(code.getCode());
             return ResponseEntity.ok(result);
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Error executing Python code: " + e.getMessage());

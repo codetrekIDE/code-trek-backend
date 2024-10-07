@@ -6,14 +6,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PythonRequest {
-    private String path;
-    private String content;
+    private String code;
 
     public PythonRequest() {
     }
 
-    public PythonRequest(String path, String content) {
-        this.path = path;
-        this.content = content;
+    public PythonRequest(String code) {
+        this.code = code;
     }
 }

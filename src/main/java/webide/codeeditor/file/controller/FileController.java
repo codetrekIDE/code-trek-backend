@@ -10,7 +10,7 @@ import java.io.IOException;
 
 // API 컨트롤러
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/api/files")
 public class FileController {
 
     private final FileOperationService dataFileService;
