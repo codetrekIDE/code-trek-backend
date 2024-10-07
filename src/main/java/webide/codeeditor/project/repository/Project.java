@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,6 +26,9 @@ public class Project {
     private String description;
 
     //TODO 파일 id 연결
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private Set<ProjectUser> projectUsers = new HashSet<>();
 
     @Column
     private Timestamp created_at;

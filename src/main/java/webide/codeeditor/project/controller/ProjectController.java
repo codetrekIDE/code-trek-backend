@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import webide.codeeditor.project.model.request.ProjectCreateRequest;
 import webide.codeeditor.project.model.request.ProjectUpdateRequest;
 import webide.codeeditor.project.model.response.ProjectCreateResponse;
+import webide.codeeditor.project.model.response.ProjectListResponse;
 import webide.codeeditor.project.model.response.ProjectResponse;
 import webide.codeeditor.project.service.ProjectService;
 
@@ -32,17 +33,15 @@ public class ProjectController {
             return ResponseEntity.status(401).body("Error: Invalid login credentials.");
         }
 
-        projectService.createProject(userId, projectCreateRequest);
-        System.out.println(userId);
+        ProjectCreateResponse projectCreateResponse = projectService.createProject(userId, projectCreateRequest);
 
-        // Todo 중계 테이블 만들기
-
-        return new ResponseEntity<ProjectCreateResponse>(HttpStatus.OK);
+        return new ResponseEntity<>(projectCreateResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/{userId}/update/{projectId}")
+    //TODO 다시 만들 것
+    @PutMapping("/update/{projectId}")
     public ResponseEntity<Void> updateProject(
-            @PathVariable Long userId,
+            @CookieValue(name = "userId") Long userId,
             @PathVariable Long projectId,
             @RequestBody ProjectUpdateRequest projectUpdateRequest
     ) {
@@ -50,24 +49,26 @@ public class ProjectController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{userId}/delete/{projectId}")
+    @DeleteMapping("/delete/{projectId}")
     public ResponseEntity<Void> deleteProject(
-            @PathVariable Long userId,
+            @CookieValue(name = "userId") Long userId,
             @PathVariable Long projectId
     ) {
         projectService.deleteProject(projectId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<List<ProjectResponse>> getProjectList(
-//            @PathVariable Long userId
-//    ) {
-//        projectService.getProjectList(userId);
-//    }
+    @GetMapping("/list")
+    public ResponseEntity<?> getProjectList(
+            @CookieValue(name = "userId") Long userId
+    ) {
+        ProjectListResponse projectListResponse = projectService.getProjectList(userId);
+        return ResponseEntity.ok(projectListResponse);
+    }
 
-    @GetMapping("/{userId}/get/{projectId}")
+    @GetMapping("/{projectId}")
     public ResponseEntity<ProjectResponse> getProject(
+            @CookieValue(name = "userId") Long userId,
             @PathVariable Long projectId
     ) {
         return new ResponseEntity<ProjectResponse>(projectService.getProject(projectId), HttpStatus.OK);
