@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import webide.codeeditor.project.model.request.ProjectCreateRequest;
 import webide.codeeditor.project.model.request.ProjectUpdateRequest;
+import webide.codeeditor.project.model.response.ProjectCreateResponse;
 import webide.codeeditor.project.model.response.ProjectResponse;
 import webide.codeeditor.project.repository.Project;
 import webide.codeeditor.project.repository.ProjectRepository;
@@ -18,7 +19,7 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    public void createProject(Long userId, ProjectCreateRequest projectCreateRequest) {
+    public ProjectCreateResponse createProject(Long userId, ProjectCreateRequest projectCreateRequest) {
         // 프로젝트 생성
         Project project = Project.builder()
                 .name(projectCreateRequest.getName())
@@ -31,6 +32,13 @@ public class ProjectService {
         Project savedProject = projectRepository.save(project);
 
         //TODO 파일 생성하기
+
+        //ProjectCreateResponse로 변환
+        ProjectCreateResponse projectCreateResponse = ProjectCreateResponse.builder()
+                .id(project.getId())
+                .build();
+
+        return projectCreateResponse;
     }
 
     public void updateProject(Long projectId, ProjectUpdateRequest projectUpdateRequest) {

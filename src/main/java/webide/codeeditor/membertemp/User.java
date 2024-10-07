@@ -3,15 +3,14 @@ package webide.codeeditor.membertemp;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
-
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Member {
+@Table(name="member")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
