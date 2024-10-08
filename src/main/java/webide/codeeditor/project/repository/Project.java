@@ -2,6 +2,7 @@ package webide.codeeditor.project.repository;
 
 import jakarta.persistence.*;
 import lombok.*;
+import webide.codeeditor.file.repository.FileEntity;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -29,6 +30,9 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProjectUser> projectUsers = new HashSet<>();
+
+    @OneToOne(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private FileEntity file;
 
     @Column
     private Timestamp created_at;

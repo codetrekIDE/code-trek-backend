@@ -4,10 +4,13 @@ package webide.codeeditor.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import webide.codeeditor.file.service.FileOperationService;
 import webide.codeeditor.member.domain.entity.User;
 import webide.codeeditor.member.repository.UserRepository;
 import webide.codeeditor.project.repository.Project;
 import webide.codeeditor.project.repository.ProjectRepository;
+import webide.codeeditor.project.repository.ProjectUser;
+import webide.codeeditor.project.repository.ProjectUserRepository;
 
 import java.sql.Timestamp;
 
@@ -20,6 +23,12 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private UserRepository memberRepository;
 
+    @Autowired
+    private ProjectUserRepository projectUserRepository;
+
+    @Autowired
+    private FileOperationService fileOperationService;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -31,9 +40,7 @@ public class DataInitializer implements CommandLineRunner {
                     .password(password)
                     .build();
             memberRepository.save(member);
-        }
 
-        for (int i = 1; i < 6; i++) {
             String name = "새 프로젝트" + Integer.toString(i);
             String description = "테스트용 프로젝트 더미 데이터입니다" + Integer.toString(i);
             Project project = Project.builder()
@@ -42,8 +49,15 @@ public class DataInitializer implements CommandLineRunner {
                     .created_at(new Timestamp(System.currentTimeMillis()))
                     .updated_at(new Timestamp(System.currentTimeMillis()))
                     .build();
-            projectRepository.save(project);
-        }
+            Project savedProject = projectRepository.save(project);
 
+            ProjectUser projectUser = ProjectUser.builder()
+                    .user(member)
+                    .project(project)
+                    .build();
+            projectUserRepository.save(projectUser);
+
+            fileOperationService.createFile("main.py", "", savedProject.getId());
+        }
     }
 }

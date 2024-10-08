@@ -31,7 +31,7 @@ public class FileController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{uuid}")
     public ResponseEntity<String> updateFile(@PathVariable UUID uuid, @RequestBody FileRequest fileRequest) {
         try {
             dataFileService.updateFileById(uuid, fileRequest.getContent());
@@ -41,7 +41,7 @@ public class FileController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{uuid}")
     public ResponseEntity<String> deleteFile(@PathVariable UUID uuid) {
         try {
             dataFileService.deleteFileById(uuid);
@@ -51,7 +51,7 @@ public class FileController {
         }
     }
 
-    @GetMapping("/read/{path}")
+    @GetMapping("/read/{uuid}")
     public ResponseEntity<String> readFile(@PathVariable UUID uuid) {
         try {
             String content = dataFileService.readFindById(uuid);

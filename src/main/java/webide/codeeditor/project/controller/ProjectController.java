@@ -7,13 +7,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import webide.codeeditor.file.service.FileOperationService;
 import webide.codeeditor.project.model.request.ProjectCreateRequest;
+import webide.codeeditor.project.model.request.ProjectSaveCodeRequest;
 import webide.codeeditor.project.model.request.ProjectUpdateRequest;
 import webide.codeeditor.project.model.response.ProjectCreateResponse;
+import webide.codeeditor.project.model.response.ProjectGetResponse;
 import webide.codeeditor.project.model.response.ProjectListResponse;
 import webide.codeeditor.project.model.response.ProjectResponse;
 import webide.codeeditor.project.service.ProjectService;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -22,12 +28,14 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final FileOperationService fileOperationService;
 
     @PostMapping("/create")
     public ResponseEntity<?> createProject(
             @RequestBody ProjectCreateRequest projectCreateRequest,
-            @CookieValue(name = "userId", defaultValue = "1") Long userId
-            ) {
+            @CookieValue(name = "userId")
+            Long userId
+            ) throws IOException {
         System.out.println("들어왔습니다");
         System.out.println(userId);
         System.out.println(projectCreateRequest.getTitle());
@@ -36,6 +44,8 @@ public class ProjectController {
         }
 
         ProjectCreateResponse projectCreateResponse = projectService.createProject(userId, projectCreateRequest);
+        fileOperationService.createFile("main.py", "", projectCreateResponse.getProjectId());
+
 
         return new ResponseEntity<>(projectCreateResponse, HttpStatus.OK);
     }
@@ -64,16 +74,26 @@ public class ProjectController {
     public ResponseEntity<?> getProjectList(
             @CookieValue(name = "userId") Long userId
     ) {
-        ProjectListResponse projectListResponse = projectService.getProjectList(userId);
+        List<ProjectListResponse> projectListResponse = projectService.getProjectList(userId);
         return ResponseEntity.ok(projectListResponse);
     }
 
     @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectResponse> getProject(
-            @CookieValue(name = "userId") Long userId,
+    public ResponseEntity<ProjectGetResponse> getProject(
+            @CookieValue(name = "userId", required = false) Long userId,
             @PathVariable Long projectId
     ) {
-        return new ResponseEntity<ProjectResponse>(projectService.getProject(projectId), HttpStatus.OK);
+        return new ResponseEntity<ProjectGetResponse>(projectService.getProject(projectId), HttpStatus.OK);
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<?> saveProjectCode(
+            @CookieValue(name = "userId", required = false) Long userId,
+            @RequestBody ProjectSaveCodeRequest projectSaveCodeRequest
+            ) {
+        projectService.saveProjectCode(projectSaveCodeRequest);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

@@ -55,9 +55,18 @@ public class CookieLoginRestController {
         if (user == null) {
             return ResponseEntity.status(401).body("Error: Invalid login credentials.");
         }
+//        // 로그인 성공 시 쿠키 설정
+//        Cookie cookie = new Cookie("userId", String.valueOf(user.getId()));
+//        cookie.setMaxAge(60 * 60);  // 쿠키 유효 시간 1시간
+//        response.addCookie(cookie);
+
         // 로그인 성공 시 쿠키 설정
         Cookie cookie = new Cookie("userId", String.valueOf(user.getId()));
         cookie.setMaxAge(60 * 60);  // 쿠키 유효 시간 1시간
+        cookie.setHttpOnly(true);   // JavaScript로 접근 불가
+        cookie.setSecure(false);    // HTTPS 사용 시 true로 설정
+        cookie.setPath("/");        // 모든 경로에서 쿠키 접근 가능
+//        cookie.setSameSite("Lax");  // SameSite 설정 (필요에 따라 'Strict' 또는 'None'으로 변경)
         response.addCookie(cookie);
         return ResponseEntity.ok("Login successful.");
     }

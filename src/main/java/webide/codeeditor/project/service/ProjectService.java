@@ -2,11 +2,15 @@ package webide.codeeditor.project.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import webide.codeeditor.file.repository.FileEntity;
+import webide.codeeditor.file.repository.FileRepository;
 import webide.codeeditor.member.domain.entity.User;
 import webide.codeeditor.member.repository.UserRepository;
 import webide.codeeditor.project.model.request.ProjectCreateRequest;
+import webide.codeeditor.project.model.request.ProjectSaveCodeRequest;
 import webide.codeeditor.project.model.request.ProjectUpdateRequest;
 import webide.codeeditor.project.model.response.ProjectCreateResponse;
+import webide.codeeditor.project.model.response.ProjectGetResponse;
 import webide.codeeditor.project.model.response.ProjectListResponse;
 import webide.codeeditor.project.model.response.ProjectResponse;
 import webide.codeeditor.project.repository.Project;
@@ -26,6 +30,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectUserRepository projectUserRepository;
     private final UserRepository userRepository;
+    private final FileRepository fileRepository;
 
     public ProjectCreateResponse createProject(
             Long userId,
@@ -52,8 +57,6 @@ public class ProjectService {
                 .build();
 
         projectUserRepository.save(projectUser);
-
-        //TODO 파일 생성하기
 
         //ProjectCreateResponse로 변환
         ProjectCreateResponse projectCreateResponse = ProjectCreateResponse.builder()
@@ -86,30 +89,51 @@ public class ProjectService {
     }
 
 
-    public ProjectListResponse getProjectList(Long userId) {
+    public List<ProjectListResponse> getProjectList(Long userId) {
 
         List<Long> projectIdList = projectUserRepository.findProjectIdsByUserId(userId);
-        ProjectListResponse response = ProjectListResponse.builder()
-                .projectIdList(projectIdList)
-                .build();
+        List<Project> projects = projectRepository.findAllById(projectIdList);
 
-        return response;
+        List<ProjectListResponse> responseList = projects.stream()
+                .map(project -> ProjectListResponse.builder()
+                        .id(project.getId())
+                        .title(project.getTitle())
+                        .updated_at(project.getUpdated_at())
+                        .build())
+                .collect(Collectors.toList());
+
+        return responseList;
     }
 
-    public ProjectResponse getProject(Long projectId) {
+    public ProjectGetResponse getProject(Long projectId) {
         // project 불러오기
         Optional<Project> projectOptional = projectRepository.findById(projectId);
         Project project = projectOptional.get();
 
+        Optional<FileEntity> fileOptional = fileRepository.findByProjectId(projectId);
+        FileEntity file = fileOptional.get();
+
         // projectResponse로 변경
-        ProjectResponse projectResponse = ProjectResponse.builder()
+        ProjectGetResponse projectGetResponse = ProjectGetResponse.builder()
                 .id(project.getId())
                 .title(project.getTitle())
                 .description(project.getDescription())
                 .created_at(project.getCreated_at())
                 .updated_at(project.getUpdated_at())
+                .code(file.getContent())
                 .build();
 
-        return projectResponse;
+        return projectGetResponse;
+    }
+
+    public void saveProjectCode(ProjectSaveCodeRequest projectSaveCodeRequest) {
+
+        Long projectId = projectSaveCodeRequest.getProjectId();
+        String code = projectSaveCodeRequest.getCode();
+
+        Optional<FileEntity> fileOptional = fileRepository.findByProjectId(projectId);
+        FileEntity file = fileOptional.get();
+        file.setContent(code);
+        fileRepository.save(file);
     }
 }
