@@ -25,6 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOriginPatterns("https://code-trek-frontend.vercel.app/") // 정확한 프론트엔드 출처
+//                .allowedOriginPatterns("http://localhost:5173")
 //                .allowedOriginPatterns("*") // localhost의 모든 포트 허용
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
