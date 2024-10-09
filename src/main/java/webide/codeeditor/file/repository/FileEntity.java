@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import webide.codeeditor.member.domain.entity.User;
+import webide.codeeditor.project.repository.Project;
 
 import java.util.UUID;
 
@@ -35,4 +37,9 @@ public class FileEntity {
         this.content = content;
         this.createdAt = java.time.LocalDateTime.now(); // 파일이 생성된 시각을 저
     }
+
+    // 프로젝트 기능 위해 추가
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", unique = true)
+    private Project project;
 }

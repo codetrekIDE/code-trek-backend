@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import webide.codeeditor.file.repository.FileEntity;
 import webide.codeeditor.file.repository.FileRepository;
+import webide.codeeditor.project.repository.Project;
+import webide.codeeditor.project.repository.ProjectRepository;
 
 
 import java.io.IOException;
@@ -18,10 +20,15 @@ import java.util.UUID;
 public class FileOperationService implements FileService {
 
     private final FileRepository fileRepository; // 의존성 주입을 위한 리포지토리
+    // 프로젝트 기능 위해 추가
+    private final ProjectRepository projectRepository;
 
     // 생성자를 통해 FileRepository 주입
-    public FileOperationService(FileRepository fileRepository) {
+    public FileOperationService(FileRepository fileRepository, ProjectRepository projectRepository) {
         this.fileRepository = fileRepository;
+
+        // 프로젝트 기능 위해 추가
+        this.projectRepository = projectRepository;
     }
 
     //id기반으로 생성
@@ -36,6 +43,28 @@ public class FileOperationService implements FileService {
         // UUID는 서버에서 생성하여 관리
         FileEntity fileEntity = new FileEntity(path, content); // UUID는 자동 생성
         fileRepository.save(fileEntity);
+
+        log.info("File created at: {}, UUID : {}", filePath, fileEntity.getId()); // 로그 출력
+    }
+
+    //id기반으로 생성
+    //프로젝트 기능 위해 추가
+    public void createFile(String path, String content, Long projectId) throws IOException {
+        Path filePath = Paths.get(path);
+        if (Files.exists(filePath)) {
+            throw new IOException("File already exists: " + path);
+        }
+        Files.write(filePath, content.getBytes());
+
+        // UUID는 서버에서 생성하여 관리
+        FileEntity fileEntity = new FileEntity(path, content); // UUID는 자동 생성
+
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+        Project project = projectOptional.get();
+        fileEntity.setProject(project);
+
+        fileRepository.save(fileEntity);
+        Files.deleteIfExists(Paths.get(path));
 
         log.info("File created at: {}, UUID : {}", filePath, fileEntity.getId()); // 로그 출력
     }
