@@ -33,7 +33,7 @@ public class ProjectController {
     @PostMapping("/create")
     public ResponseEntity<?> createProject(
             @RequestBody ProjectCreateRequest projectCreateRequest,
-            @CookieValue(name = "userId")
+            @CookieValue(name = "userId", required = false)
             Long userId
             ) throws IOException {
         System.out.println("들어왔습니다");
