@@ -86,7 +86,7 @@ public class ProjectController {
         return new ResponseEntity<ProjectGetResponse>(projectService.getProject(projectId), HttpStatus.OK);
     }
 
-    @PostMapping("/save")
+    @PatchMapping("/save")
     public ResponseEntity<?> saveProjectCode(
             @CookieValue(name = "userId", required = false) Long userId,
             @RequestBody ProjectSaveCodeRequest projectSaveCodeRequest
