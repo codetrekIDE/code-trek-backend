@@ -44,6 +44,8 @@ public class FileOperationService implements FileService {
         FileEntity fileEntity = new FileEntity(path, content); // UUID는 자동 생성
         fileRepository.save(fileEntity);
 
+        Files.deleteIfExists(filePath);
+
         log.info("File created at: {}, UUID : {}", filePath, fileEntity.getId()); // 로그 출력
     }
 

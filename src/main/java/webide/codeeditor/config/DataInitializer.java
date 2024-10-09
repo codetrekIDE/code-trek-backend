@@ -4,6 +4,8 @@ package webide.codeeditor.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import webide.codeeditor.file.repository.FileEntity;
 import webide.codeeditor.file.service.FileOperationService;
 import webide.codeeditor.member.domain.entity.User;
 import webide.codeeditor.member.repository.UserRepository;
@@ -51,6 +53,7 @@ public class DataInitializer implements CommandLineRunner {
                     .build();
             Project savedProject = projectRepository.save(project);
 
+            // 중계 테이블 생성
             ProjectUser projectUser = ProjectUser.builder()
                     .user(member)
                     .project(project)
