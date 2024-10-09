@@ -45,7 +45,7 @@ public class ProjectController {
 
         ProjectCreateResponse projectCreateResponse = projectService.createProject(userId, projectCreateRequest);
         fileOperationService.createFile("main.py", "", projectCreateResponse.getProjectId());
-
+        
 
         return new ResponseEntity<>(projectCreateResponse, HttpStatus.OK);
     }
