@@ -64,7 +64,7 @@ public class FileOperationService implements FileService {
         fileEntity.setProject(project);
 
         fileRepository.save(fileEntity);
-        Files.deleteIfExists(Paths.get(path));
+        Files.deleteIfExists(filePath);
 
         log.info("File created at: {}, UUID : {}", filePath, fileEntity.getId()); // 로그 출력
     }
