@@ -37,8 +37,10 @@ out/
 .vscode/
 
 ### DS_Store 삭제 ###
-
 .DS_Store
 ._.DS_Store
 **/.DS_Store
 **/._.DS_Store
+
+### 파이썬 관련 파일 ###
+*.py
