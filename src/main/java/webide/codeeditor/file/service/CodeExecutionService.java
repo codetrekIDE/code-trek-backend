@@ -17,7 +17,7 @@ public class CodeExecutionService {
     public String executePythonCode(String code) throws IOException {
 
         //temp.py 임시 저장 파일 생성
-        String filePath = "main.py";
+        String filePath = "temp.py";
         Files.write(Paths.get(filePath), code.getBytes()); //code문자열을 바이트배열로 파일에 저장
 
         // ProcessBuilder를 사용해 Python 코드를 실행
@@ -28,7 +28,8 @@ public class CodeExecutionService {
         Process process = processBuilder.start(); // 파이썬 코드 시작
 
         // 출력 및 오류를 읽어오기 위한 스트림
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
             //reader : BufferedReader와 InputStreamReader를 사용해 프로세스의 출력 을 한 줄씩 읽어옴
 
             StringBuilder output = new StringBuilder();
@@ -36,11 +37,21 @@ public class CodeExecutionService {
             while ((line = reader.readLine()) != null) { //한 줄씩 끝까지 읽어옴
                 output.append(line).append("\n");
             }
+
+            //오류 스트림도 읽어서 출력에 추가
+            StringBuilder errorOutput = new StringBuilder();
+            while ((line = errorReader.readLine()) != null) {
+                errorOutput.append(line).append("\n");
+            }
+
             process.waitFor(); // 프로세스가 끝날 때까지 기다림
             return output.toString(); // Python 코드 실행 결과 반환
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IOException("Python script execution", e);
+        } finally {
+            // 임시 파일 삭제
+            Files.deleteIfExists(Paths.get(filePath));
         }
     }
 }
